@@ -3,7 +3,7 @@
 
 ---
 
-## Quick one-sentence summary
+## summary
 Computers take **input → process → output** — we design programs with pseudocode or flowcharts, then use `print`, `input`, **variables**, **data types**, **operators**, and **formatting** to make programs that work and look nice.
 
 ---
