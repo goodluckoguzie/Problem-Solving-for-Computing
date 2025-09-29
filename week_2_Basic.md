@@ -1,4 +1,4 @@
-# Week 1 — COM161: Intro & Exercises (Student-friendly)
+# Week 2 — COM161: Intro & Exercises
 
 
 ---
