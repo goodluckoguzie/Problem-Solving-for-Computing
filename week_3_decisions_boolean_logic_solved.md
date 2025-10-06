@@ -1,9 +1,9 @@
-# Week 3 — COM161: Decisions & Boolean Logic — Solved Exercises
+# Week 3 — COM161: Decisions & Boolean Logic
 
 ---
 
 ## summary
-We use **decision structures** to choose different paths: `if`, `if…else`, and `if…elif…else`. We build tests with **relational operators** (`>`, `<`, `==`, `!=`, `>=`, `<=`) and combine them with **logical operators** (`and`, `or`, `not`). We can compare **numbers** and **strings**, and store truth values in **Boolean** variables (`True`/`False`).
+We use **decision structures** to choose different paths: `if`, `if…else`, and `if…elif…else`. We build tests with **relational operators** (`>`, `<`, `==`, `!=`, `>=`, `<=`) and combine them with **logical operators** (`and`, `or`, `not`). We can compare **numbers** and **strings**, and store truth values in **Boolean** variables (`True`/`False`). We also care about **truth tables**, **operator precedence**, **short‑circuiting**, and **common pitfalls**.
 
 ---
 
@@ -14,7 +14,12 @@ We use **decision structures** to choose different paths: `if`, `if…else`, and
 4. Exercise 3 — Simple login (string comparisons)
 5. Exercise 4 — Discount eligibility (and/or/not)
 6. Exercise 5 — Leap year checker (compound condition)
-7. Cheat-sheet
+7. Truth tables (and / or / not) + De Morgan’s law
+8. Precedence, grouping & short‑circuit rules
+9. Common pitfalls & tips
+10. Cheat‑sheet
+11. Teaching tips & mini‑project ideas
+12. Extra practice with full solutions
 
 ---
 
@@ -78,11 +83,6 @@ Average: 53.3
 Result: Pass
 ```
 
-### Line-by-line explanation
-- Read three numbers as `float` so decimals are allowed.
-- Compute the mean.
-- `if avg >= 50:` decides the path; only one of the two prints will execute.
-
 ---
 
 # 3) Exercise 2 — Grade calculator A–F (if/elif ladder)
@@ -93,19 +93,6 @@ Result: Pass
 - `C` ≥ 50
 - `D` ≥ 40
 - else `F`
-
-### Pseudocode
-```
-BEGIN
-  INPUT score
-  IF score >= 70 THEN grade = 'A'
-  ELIF score >= 60 THEN grade = 'B'
-  ELIF score >= 50 THEN grade = 'C'
-  ELIF score >= 40 THEN grade = 'D'
-  ELSE grade = 'F'
-  DISPLAY grade
-END
-```
 
 ### Python script
 ```python
@@ -126,25 +113,10 @@ else:
 print("Grade:", grade)
 ```
 
-### Sample run
-```
-Score (0–100): 66
-Grade: B
-```
-
-### Line-by-line explanation
-- Conditions are checked **top to bottom**. The first `True` block runs and the rest are skipped.
-
 ---
 
 # 4) Exercise 3 — Simple login (string comparisons)
 
-### Plain-English steps
-1. Store the correct username and password in variables.
-2. Ask the user to enter both.
-3. If both match → welcome; else → show error.
-
-### Python script
 ```python
 # Exercise 3: Simple login (case-insensitive username, case-sensitive password)
 correct_user = "alex"
@@ -159,37 +131,10 @@ else:
     print("Login failed: check username or password.")
 ```
 
-### Sample run (success)
-```
-Username: ALEX
-Password: Python123
-Welcome, alex
-```
-
-### Explanation
-- We normalise the username with `.strip().lower()` so `ALEX` equals `alex`.
-- Password comparison is case-sensitive.
-
 ---
 
 # 5) Exercise 4 — Discount eligibility (and/or/not)
 
-**Rule:** 20% discount if the customer is **under 18 or 65+**, or if they are a **student**. No discount otherwise.
-
-### Pseudocode
-```
-BEGIN
-  INPUT age
-  INPUT student (yes/no)
-  IF (age < 18 OR age >= 65) OR (student == yes) THEN
-     DISPLAY "Discount applies"
-  ELSE
-     DISPLAY "No discount"
-  ENDIF
-END
-```
-
-### Python script
 ```python
 # Exercise 4: Discount eligibility using logical operators
 age = int(input("Age: "))
@@ -203,35 +148,10 @@ else:
     print("No discount")
 ```
 
-### Sample run
-```
-Age: 19
-Student? (yes/no): yes
-Discount applies: 20% off
-```
-
-### Explanation
-- We build a **compound** test and store it in a Boolean `eligible` (a flag) for clarity.
-
 ---
 
 # 6) Exercise 5 — Leap year checker (compound condition)
 
-**Rule:** A year is a leap year if it is **divisible by 400**, or **divisible by 4 but not by 100**.
-
-### Pseudocode
-```
-BEGIN
-  INPUT year
-  IF (year % 400 == 0) OR ((year % 4 == 0) AND (year % 100 != 0)) THEN
-     DISPLAY "Leap year"
-  ELSE
-     DISPLAY "Not a leap year"
-  ENDIF
-END
-```
-
-### Python script
 ```python
 # Exercise 5: Leap year checker
 year = int(input("Enter a year: "))
@@ -244,18 +164,51 @@ else:
     print(year, "is not a leap year")
 ```
 
-### Sample run
-```
-Enter a year: 2000
-2000 is a leap year
-```
+---
 
-### Explanation
-- `%` is the remainder operator. We combine conditions with `and`/`or` and group them with parentheses for readability.
+# 7) Truth tables (and / or / not) + De Morgan’s law
+
+| A | B | A and B | A or B |
+|---|---|---------|--------|
+| T | T |    T    |   T    |
+| T | F |    F    |   T    |
+| F | T |    F    |   T    |
+| F | F |    F    |   F    |
+
+`not A` flips True/False.  
+**De Morgan’s law:** `not (A and B)` ⇔ `(not A) or (not B)`; `not (A or B)` ⇔ `(not A) and (not B)`.
+
+**Python demo** (optional): generate the table and print it nicely.
+```python
+vals = [True, False]
+print("A\tB\tA and B\tA or B\tnot A")
+for A in vals:
+    for B in vals:
+        print(A, B, A and B, A or B, (not A), sep='\t')
+```
 
 ---
 
-# 7) Cheat-sheet (decisions)
+# 8) Precedence, grouping & short‑circuit rules
+- Boolean precedence (highest → lowest): **`not`**, then **`and`**, then **`or`**.
+- Use **parentheses** to make intent obvious, especially when mixing with comparisons: `if (temp < 0) or (temp > 100): ...`.
+- **Short‑circuiting:**
+  - `A and B` stops early if `A` is False.
+  - `A or B` stops early if `A` is True.
+
+---
+
+# 9) Common pitfalls & tips
+- `=` **assigns**, `==` **compares**.
+- Always **convert input** before comparing numbers: `age = int(input(...))`.
+- **Case‑folding** for usernames: `user.lower()`; keep passwords case‑sensitive.
+- **String ordering** uses character codes—be careful comparing upper/lowercase directly.
+- Prefer **flags** for complex tests: `eligible = (...)` then `if eligible:`.
+- Test **boundary values** (e.g., `59.9`, `60.0`, `60.1`).
+
+---
+
+# 10) Cheat‑sheet (decisions)
 - **if**
   ```python
   if condition:
@@ -284,5 +237,71 @@ Enter a year: 2000
 
 ---
 
-> Mini‑project idea: Write a “Cinema Kiosk” that asks age, student status, and day of week, prints the ticket price, and shows a message if the user qualifies for a family or senior deal.
+# 11) Teaching tips & mini‑project ideas
+- **Trace tables** for `if/elif/else` — write columns for inputs, each condition, and the chosen branch.
+- **Draw flowcharts** for Exercises 2 and 5 to reinforce decision diamonds.
+- **Boundary testing** worksheet for grade cutoffs.
 
+**Mini‑project options:**
+1) **Cinema Kiosk** — ask age, student status, day of week; output ticket price & deal message.  
+2) **Login + Password Rules** — re‑prompt until valid; lock out after 3 tries.  
+3) **Safety Monitor** — read temperature and time; warn if out of safe range.
+
+---
+
+# 12) Extra practice with full solutions
+
+## A) Triangle classifier (with validity check)
+```python
+# Extra A: Triangle type
+print("Enter three side lengths:")
+a = float(input("a: "))
+b = float(input("b: "))
+c = float(input("c: "))
+
+valid = (a + b > c) and (a + c > b) and (b + c > a)
+if not valid:
+    print("Not a valid triangle")
+elif (a == b) and (b == c):
+    print("Equilateral")
+elif (a == b) or (a == c) or (b == c):
+    print("Isosceles")
+else:
+    print("Scalene")
+```
+
+## B) Password strength (simple rules)
+```python
+# Extra B: Password strength (length >= 8, has digit, has letter)
+pw = input("Password: ")
+has_digit = any(ch.isdigit() for ch in pw)
+has_alpha = any(ch.isalpha() for ch in pw)
+if (len(pw) >= 8) and has_digit and has_alpha:
+    print("Strong enough")
+else:
+    print("Weak: use 8+ chars with letters and digits")
+```
+
+## C) Cinema kiosk (combined rules)
+```python
+# Extra C: Cinema kiosk with age bands, student, weekday/weekend
+age = int(input("Age: "))
+student = input("Student? (y/n): ").strip().lower() == 'y'
+day = input("Day (mon..sun): ").strip().lower()
+
+is_weekend = day in {"sat", "sun", "saturday", "sunday"}
+base = 12.00 if is_weekend else 10.00
+
+if age < 12:
+    price = base * 0.5
+elif age >= 65:
+    price = base * 0.7
+elif student:
+    price = base * 0.8
+else:
+    price = base
+
+print(f"Ticket £{price:.2f}")
+```
+
+> Feel free to copy any of the code blocks into your editor and run them one by one. The ZIP I’ve provided also contains each exercise as its own `.py` file for easy testing.
