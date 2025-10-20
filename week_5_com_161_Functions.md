@@ -1,4 +1,4 @@
-# Week 5 — COM161: Functions (Solved)
+# Week 5 — COM161: Functions
 
 ---
 
