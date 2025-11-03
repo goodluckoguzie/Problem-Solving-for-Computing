@@ -1,4 +1,4 @@
-# Week 7 — COM161: Lists & Tuples (Solved)
+# Week 7 — COM161: Lists & Tuples
 
 ---
 
