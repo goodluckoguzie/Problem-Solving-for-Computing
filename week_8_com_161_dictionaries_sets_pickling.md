@@ -1,4 +1,4 @@
-# Week 8 — COM161: Dictionaries, Sets & Pickling (Solved)
+# Week 8 — COM161: Dictionaries, Sets & Pickling
 
 ---
 
