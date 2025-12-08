@@ -1,8 +1,8 @@
 import os
 import cv2
-import face_recognition
 import pickle
 import numpy as np
+from deepface import DeepFace
 
 def train_model():
     print("Starting training process...")
@@ -24,7 +24,7 @@ def train_model():
 
     print(f"Found folder for student: {student_name}")
     
-    known_encodings = []
+    known_embeddings = []
     
     # Process images in the folder
     image_files = [f for f in os.listdir(student_folder) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
@@ -39,31 +39,33 @@ def train_model():
         img_path = os.path.join(student_folder, img_file)
         print(f"Processing {img_file}...")
         
-        # Load image
-        image = face_recognition.load_image_file(img_path)
-        
-        # Detect faces and get encodings
-        # We assume there's only one person (the student) in the training photos
-        encodings = face_recognition.face_encodings(image)
-        
-        if len(encodings) > 0:
-            known_encodings.append(encodings[0])
-            print(f"  - Face detected and encoded.")
-        else:
-            print(f"  - No face detected in {img_file}. Skipping.")
+        try:
+            # Generate embedding using DeepFace
+            # We use 'VGG-Face' model by default as it's balanced
+            embedding_objs = DeepFace.represent(img_path = img_path, model_name = "VGG-Face", enforce_detection = False)
             
-    if not known_encodings:
-        print("Error: No valid face encodings could be generated from the images.")
+            if len(embedding_objs) > 0:
+                # Take the first face found
+                embedding = embedding_objs[0]["embedding"]
+                known_embeddings.append(embedding)
+                print(f"  - Face processed.")
+            else:
+                print(f"  - No face detected in {img_file}. Skipping.")
+        except Exception as e:
+            print(f"  - Error processing {img_file}: {e}")
+            
+    if not known_embeddings:
+        print("Error: No valid face embeddings could be generated from the images.")
         return
         
-    # Average the encodings to create a stable profile
-    # Each encoding is a 128-dimensional vector
-    final_encoding = np.mean(known_encodings, axis=0)
+    # Average the embeddings to create a stable profile
+    final_embedding = np.mean(known_embeddings, axis=0)
     
     # Save the data
     data = {
         "name": student_name,
-        "encoding": final_encoding
+        "embedding": final_embedding,
+        "model_name": "VGG-Face"
     }
     
     with open("encodings.pkl", "wb") as f:
@@ -74,4 +76,3 @@ def train_model():
 
 if __name__ == "__main__":
     train_model()
-

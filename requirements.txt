@@ -1,7 +1,5 @@
-cmake
-setuptools
 opencv-python
-face-recognition
+deepface
 ultralytics
 numpy
-pickle-mixin
+tf-keras
