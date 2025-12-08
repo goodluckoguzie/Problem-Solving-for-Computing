@@ -5,13 +5,17 @@ This project allows you to train a system to recognize your face using your own 
 ## Prerequisites
 
 1.  **Install Python:** Ensure you have Python installed.
-2.  **Install Dependencies:** Run the following command in your terminal:
+2.  **Install Dependencies:**
+    *   **Windows / Linux:**
+        ```bash
+        pip install -r requirements.txt
+        ```
+    *   **Mac OS:**
+        ```bash
+        pip install -r requirements_mac.txt
+        ```
 
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-    *Note: This installation uses DeepFace which is much easier to install than other libraries.*
+    *Note: If you are on a Mac with M1/M2 chip and encounter TensorFlow errors, try installing `tensorflow-macos` separately: `pip install tensorflow-macos`.*
 
 ## Instructions
 
