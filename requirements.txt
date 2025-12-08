@@ -1,6 +1,7 @@
+cmake
+setuptools
 opencv-python
 face-recognition
 ultralytics
 numpy
 pickle-mixin
-

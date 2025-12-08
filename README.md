@@ -4,14 +4,16 @@ This project allows you to train a system to recognize your face using your own 
 
 ## Prerequisites
 
-1.  **Install Python:** Ensure you have Python installed.
-2.  **Install Dependencies:** Run the following command in your terminal:
+1.  **Install Python:** Ensure you have Python installed (3.8 to 3.11 recommended).
+2.  **Install C++ Build Tools (Important for Windows):**
+    *   The `face_recognition` library depends on `dlib`, which requires C++ compilers.
+    *   **Download and install "Visual Studio Build Tools"** from Microsoft.
+    *   During installation, check the box for **"Desktop development with C++"**.
+3.  **Install Dependencies:** Run the following command in your terminal:
 
     ```bash
     pip install -r requirements.txt
     ```
-
-    *Note: Installing `face_recognition` might require Visual Studio C++ build tools on Windows (for `dlib`). If you encounter errors, search for "install dlib python windows".*
 
 ## Instructions
 
@@ -50,7 +52,8 @@ This project allows you to train a system to recognize your face using your own 
 
 ## Troubleshooting
 
+*   **"CMake is not installed" Error:**
+    *   Run `pip install cmake` manually, then try installing requirements again.
+    *   If that fails, ensure you have installed **Visual Studio Build Tools** with the "Desktop development with C++" workload.
 *   **No folder found:** Make sure your folder starts with `img_` (e.g., `img_john`).
 *   **Webcam not opening:** Check if another app is using the camera.
-*   **Installation errors:** If `pip install` fails on `dlib` or `face_recognition`, try installing the pre-compiled wheel for dlib first.
-
