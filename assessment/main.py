@@ -11,6 +11,9 @@ import tui
 import process
 
 
+import visual
+
+
 def main():
     """
     Main function that controls the program flow.
@@ -125,14 +128,34 @@ def handle_visualise_menu(data):
         sub_choice = tui.get_submenu_choice()
         
         if sub_choice == '1':
-            # Task 10: Pie chart - Reviews per park (will be implemented in Phase 3)
-            tui.display_message("Feature coming soon: Pie chart - Reviews per park")
+            # Task 10: Pie chart - Reviews per park
+            counts = process.count_reviews_per_park(data)
+            tui.display_message("Generating pie chart...")
+            visual.plot_reviews_pie_chart(counts)
+            
         elif sub_choice == '2':
-            # Task 11: Bar chart - Top 10 locations (will be implemented in Phase 3)
-            tui.display_message("Feature coming soon: Bar chart - Top 10 locations by rating")
+            # Task 11: Bar chart - Top 10 locations by rating
+            park = tui.get_user_input("Enter park name: ")
+            locations, ratings = process.get_top_locations_by_rating(data, park)
+            
+            if locations:
+                tui.display_message("Generating bar chart...")
+                visual.plot_top_locations_bar_chart(locations, ratings, park)
+            else:
+                tui.display_message(f"No data found for park: {park}")
+                
         elif sub_choice == '3':
-            # Task 12: Bar chart - Average rating by month (will be implemented in Phase 3)
-            tui.display_message("Feature coming soon: Bar chart - Average rating by month")
+            # Task 12: Bar chart - Average rating by month
+            park = tui.get_user_input("Enter park name: ")
+            months, ratings = process.calculate_monthly_averages(data, park)
+            
+            # Check if we have any data (if all ratings are 0, likely invalid park)
+            if sum(ratings) > 0:
+                tui.display_message("Generating bar chart...")
+                visual.plot_monthly_ratings_bar_chart(months, ratings, park)
+            else:
+                tui.display_message(f"No data found for park: {park}")
+                
         elif sub_choice == 'X':
             break  # Return to main menu
         else:

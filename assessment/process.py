@@ -143,3 +143,133 @@ def calculate_average_rating_by_year(data, park_name, year):
     return total_rating / count
 
 
+def count_reviews_per_park(data):
+    """
+    Count the number of reviews for each park.
+    
+    What: Iterates through data and counts reviews per park branch
+    Why: Needed for the pie chart visualization (Task 10)
+    
+    Args:
+        data (list): The list of all reviews
+        
+    Returns:
+        dict: Keys are park names, values are review counts
+    """
+    counts = {}
+    
+    for review in data:
+        branch = review.get('Branch', 'Unknown')
+        if branch in counts:
+            counts[branch] += 1
+        else:
+            counts[branch] = 1
+            
+    return counts
+
+
+def get_top_locations_by_rating(data, park_name, top_n=10):
+    """
+    Find locations with the highest average rating for a specific park.
+    
+    What: Groups by location, calculates average rating, sorts, and returns top N
+    Why: Needed for the bar chart visualization (Task 11)
+    
+    Args:
+        data (list): The list of all reviews
+        park_name (str): The park to analyze
+        top_n (int): Number of top locations to return
+        
+    Returns:
+        tuple: (list of locations, list of average ratings)
+    """
+    target_park = park_name.lower()
+    location_ratings = {}  # {location: [sum_ratings, count]}
+    
+    for review in data:
+        branch = review.get('Branch', '').lower()
+        
+        if target_park in branch:
+            location = review.get('Reviewer_Location', 'Unknown')
+            try:
+                rating = int(review.get('Rating', 0))
+                
+                if location not in location_ratings:
+                    location_ratings[location] = [0, 0]
+                
+                location_ratings[location][0] += rating
+                location_ratings[location][1] += 1
+            except ValueError:
+                continue
+                
+    # Calculate averages
+    averages = []
+    for location, stats in location_ratings.items():
+        avg = stats[0] / stats[1]
+        averages.append((location, avg))
+        
+    # Sort by average rating (descending)
+    averages.sort(key=lambda x: x[1], reverse=True)
+    
+    # Get top N
+    top_results = averages[:top_n]
+    
+    # Separate into two lists
+    locations = [item[0] for item in top_results]
+    ratings = [item[1] for item in top_results]
+    
+    return locations, ratings
+
+
+def calculate_monthly_averages(data, park_name):
+    """
+    Calculate average rating for each month for a specific park.
+    
+    What: Groups by month (ignoring year), calculates average rating
+    Why: Needed for monthly trend bar chart (Task 12)
+    
+    Args:
+        data (list): The list of all reviews
+        park_name (str): The park to analyze
+        
+    Returns:
+        tuple: (list of month names, list of average ratings)
+    """
+    target_park = park_name.lower()
+    # Initialize dictionary for 12 months (1-12)
+    month_stats = {i: {'sum': 0, 'count': 0} for i in range(1, 13)}
+    
+    for review in data:
+        branch = review.get('Branch', '').lower()
+        
+        if target_park in branch:
+            try:
+                # Year_Month format: YYYY-M or YYYY-MM
+                year_month = review.get('Year_Month', '')
+                if '-' in year_month:
+                    parts = year_month.split('-')
+                    if len(parts) == 2:
+                        month = int(parts[1])
+                        rating = int(review.get('Rating', 0))
+                        
+                        if 1 <= month <= 12:
+                            month_stats[month]['sum'] += rating
+                            month_stats[month]['count'] += 1
+            except ValueError:
+                continue
+                
+    # Calculate averages and prepare lists
+    month_names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 
+                   'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    ratings = []
+    
+    for i in range(1, 13):
+        stats = month_stats[i]
+        if stats['count'] > 0:
+            ratings.append(stats['sum'] / stats['count'])
+        else:
+            ratings.append(0)
+            
+    return month_names, ratings
+
+
