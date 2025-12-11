@@ -80,14 +80,29 @@ def handle_view_data_menu(data):
         sub_choice = tui.get_submenu_choice()
         
         if sub_choice == '1':
-            # Task 7: Display all reviews for a park (will be implemented in Phase 2)
-            tui.display_message("Feature coming soon: Display all reviews for a park")
+            # Task 7: Display all reviews for a specific park
+            park = tui.get_user_input("Enter park name: ")
+            reviews = process.filter_reviews_by_park(data, park)
+            tui.display_reviews(reviews)
+            
         elif sub_choice == '2':
-            # Task 8: Count reviews by park and location (will be implemented in Phase 2)
-            tui.display_message("Feature coming soon: Count reviews by park and location")
+            # Task 8: Count reviews by park and location
+            park = tui.get_user_input("Enter park name: ")
+            location = tui.get_user_input("Enter reviewer location: ")
+            count = process.count_reviews_by_park_and_location(data, park, location)
+            tui.display_message(f"\nNumber of reviews for {park} from {location}: {count}")
+            
         elif sub_choice == '3':
-            # Task 9: Average rating by park and year (will be implemented in Phase 2)
-            tui.display_message("Feature coming soon: Average rating by park and year")
+            # Task 9: Average rating by park and year
+            park = tui.get_user_input("Enter park name: ")
+            year = tui.get_user_input("Enter year (YYYY): ")
+            average = process.calculate_average_rating_by_year(data, park, year)
+            
+            if average > 0:
+                tui.display_message(f"\nAverage rating for {park} in {year}: {average:.2f}/5")
+            else:
+                tui.display_message(f"\nNo reviews found for {park} in {year}.")
+                
         elif sub_choice == '4':
             # Task 13: Average score per park by location (will be implemented in Phase 4)
             tui.display_message("Feature coming soon: Average score per park by location")
@@ -155,4 +170,5 @@ def handle_export_menu(data):
 # When you run main.py, Python will execute the code below
 if __name__ == "__main__":
     main()
+
 

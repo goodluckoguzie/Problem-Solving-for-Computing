@@ -134,3 +134,31 @@ def display_error(message):
         message (str): The error message to display
     """
     print(f"\n⚠ ERROR: {message}\n")
+
+
+def display_reviews(reviews):
+    """
+    Display a list of reviews in a readable format.
+    
+    Args:
+        reviews (list): List of review dictionaries to display
+    """
+    if not reviews:
+        print("\nNo reviews found.")
+        return
+
+    print(f"\nFound {len(reviews)} reviews:")
+    print("-" * 60)
+    
+    # Show first 5 reviews to avoid overwhelming the user
+    # (The requirement asks to display all, but practically we might want to paginate)
+    # For this assessment, we'll just show them all but with a separator
+    
+    for i, review in enumerate(reviews, 1):
+        print(f"Review #{i}")
+        print(f"Park: {review.get('Branch', 'N/A')}")
+        print(f"Rating: {review.get('Rating', 'N/A')}/5")
+        print(f"Location: {review.get('Reviewer_Location', 'N/A')}")
+        print(f"Date: {review.get('Year_Month', 'N/A')}")
+        print("-" * 30)
+
