@@ -12,6 +12,7 @@ import process
 
 
 import visual
+import exporter
 
 
 def main():
@@ -107,8 +108,20 @@ def handle_view_data_menu(data):
                 tui.display_message(f"\nNo reviews found for {park} in {year}.")
                 
         elif sub_choice == '4':
-            # Task 13: Average score per park by location (will be implemented in Phase 4)
-            tui.display_message("Feature coming soon: Average score per park by location")
+            # Task 13: Average score per park by reviewer location
+            tui.display_message("Calculating average scores per park by location...")
+            results = process.calculate_park_location_averages(data)
+            
+            # Display results (showing a sample to avoid flooding the screen)
+            for park, locations in results.items():
+                tui.display_message(f"\nPARK: {park}")
+                tui.display_message("-" * 30)
+                count = 0
+                for location, avg in sorted(locations.items())[:5]:  # Show top 5 alphabetical
+                    tui.display_message(f"{location}: {avg:.2f}/5")
+                    count += 1
+                if len(locations) > 5:
+                    tui.display_message(f"... and {len(locations) - 5} more locations.")
         elif sub_choice == 'X':
             break  # Return to main menu
         else:
@@ -170,19 +183,43 @@ def handle_export_menu(data):
     Args:
         data (list): The loaded dataset
     """
+    # Create an instance of the base exporter to prepare data
+    base_exporter = exporter.DataExporter()
+    aggregate_data = base_exporter.prepare_aggregate_data(data)
+    
     while True:
         tui.display_export_menu()
         sub_choice = tui.get_submenu_choice()
         
+        filename = "park_reviews_summary"
+        
         if sub_choice == '1':
-            # Task 14: Export as TXT (will be implemented in Phase 4)
-            tui.display_message("Feature coming soon: Export as TXT")
+            # Task 14: Export as TXT
+            txt_exporter = exporter.TXTExporter()
+            success, message = txt_exporter.export(aggregate_data, filename)
+            if success:
+                tui.display_message(f"✓ {message}")
+            else:
+                tui.display_error(message)
+                
         elif sub_choice == '2':
-            # Task 14: Export as CSV (will be implemented in Phase 4)
-            tui.display_message("Feature coming soon: Export as CSV")
+            # Task 14: Export as CSV
+            csv_exporter = exporter.CSVExporter()
+            success, message = csv_exporter.export(aggregate_data, filename)
+            if success:
+                tui.display_message(f"✓ {message}")
+            else:
+                tui.display_error(message)
+                
         elif sub_choice == '3':
-            # Task 14: Export as JSON (will be implemented in Phase 4)
-            tui.display_message("Feature coming soon: Export as JSON")
+            # Task 14: Export as JSON
+            json_exporter = exporter.JSONExporter()
+            success, message = json_exporter.export(aggregate_data, filename)
+            if success:
+                tui.display_message(f"✓ {message}")
+            else:
+                tui.display_error(message)
+                
         elif sub_choice == 'X':
             break  # Return to main menu
         else:

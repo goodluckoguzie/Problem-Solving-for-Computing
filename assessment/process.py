@@ -273,3 +273,49 @@ def calculate_monthly_averages(data, park_name):
     return month_names, ratings
 
 
+def calculate_park_location_averages(data):
+    """
+    Calculate the average rating for every park from every location.
+    
+    What: Groups by Park AND Location, calculates average rating
+    Why: Task 13 requirement (Section D)
+    
+    Args:
+        data (list): The list of all reviews
+        
+    Returns:
+        dict: Nested dictionary {park: {location: average_rating}}
+    """
+    # Structure: {park: {location: {'sum': 0, 'count': 0}}}
+    stats = {}
+    
+    for review in data:
+        branch = review.get('Branch', 'Unknown')
+        location = review.get('Reviewer_Location', 'Unknown')
+        
+        try:
+            rating = int(review.get('Rating', 0))
+            
+            if branch not in stats:
+                stats[branch] = {}
+                
+            if location not in stats[branch]:
+                stats[branch][location] = {'sum': 0, 'count': 0}
+                
+            stats[branch][location]['sum'] += rating
+            stats[branch][location]['count'] += 1
+        except ValueError:
+            continue
+            
+    # Calculate final averages
+    results = {}
+    for park, locations in stats.items():
+        results[park] = {}
+        for location, data in locations.items():
+            if data['count'] > 0:
+                avg = data['sum'] / data['count']
+                results[park][location] = avg
+                
+    return results
+
+
